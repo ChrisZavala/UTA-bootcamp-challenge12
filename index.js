@@ -212,5 +212,114 @@ async function getUpdateEmployeeRoleInfo() {
 //will put these with all the functions that are calling the database. 
 
 
+//This is the hard section for sure. Going to start writing 17 functions that are making calls to the database. On paper that is what I have. 
+
+//going to start with all the get(s)
+//getRoles()
+async function getRoles() {
+    try{
+        const rows = await db.query("SELECT title FROM role");
+        let roles = [];
+        for(const row of rows){
+            roles.push(row.title);
+        }
+        return roles;
+    } catch (err) {
+        console.log(err);
+    }
+}
+//getManagerNames()
+async function getManagerNames() {
+    try{
+        const rows = await db.query("SELECT * FROM employee WHERE manager_id IS NULL");
+        let employeeNames = [];
+        for(const employee of rows){
+            employeeNames.push(employee.first_name + " "+ employee.last_name);
+        }
+        return employeeNames;
+    } catch (err) {
+        console.log(err);
+    }
+}
+//getDepartmentNames()
+async function getDepartmentNames() {
+    try{
+        const rows = await db.query("SELECT name FROM department");
+        let departments = [];
+        for(const row of rows){
+            departments.push(row.name);
+        }
+        return departments;
+    } catch (err) {
+        console.log(err);
+    }
+}
+//getDepartmentId()
+async function getDepartmentId(departmentName) {
+    try{
+        const args = [departmentName];
+        const rows = await db.query("SELECT * FROM department WHERE department.name=?", args);
+        return rows[0].id;
+    }catch (err) {
+        console.log(err);
+    }
+}
+//getRoleId()
+async function getRoleId(roleName) {
+    try{
+        const args = [roleName];
+        const rows = await db.query("SELECT * FROM role WHERE role.title=?", args);
+        return rows[0].id;
+    }catch (err) {
+        console.log(err);
+    }
+}
+//getEmployeeNames()
+async function getEmployeeNames() {
+    try{
+        const rows = await db.query("SELECT * FROM employee");
+        const employeeNames = [];
+        for(const employee of rows) {
+            employeeNames.push(employee.first_name + " " + employee.last_name);
+        }
+        return employeeNames;
+    } catch (err) {
+        console.log(err);
+    }
+}
+//getEmployeeId
+async function getEmployeeId(fullName) {
+    try{
+        const employee = getFirstandLastName(fullName);
+        const args = [employee[0], employee[1]];
+        const rows = await db.query("SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name", args);
+        return rows[0].id;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+
+
+
+
+
+
+async function viewAllDepartments() {
+    try {
+        const result = await db.query("SELECT * FROM department");
+        console.table(result);
+    } catch (err) {
+        console.log(err);
+        
+    }
+    startApp();
+}
+
+
+
+
+
 
 startApp();

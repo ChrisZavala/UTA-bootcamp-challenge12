@@ -18,7 +18,7 @@
   "homepage": "https://github.com/ChrisZavala/UTA-bootcamp-challenge12#readme",
   "dependencies": {
     "console.table": "^0.10.0",
-    "inquirer": "^9.1.4",
+    "inquirer": "^7.0.0",
     "mysql2": "^3.1.0"
   }
 }
