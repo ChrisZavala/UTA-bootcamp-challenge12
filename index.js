@@ -298,7 +298,30 @@ async function getEmployeeId(fullName) {
         console.log(err);
     }
 }
-
+//All my views are coming!
+//viewAllRoles()
+async function viewAllRoles() {
+    try{
+        const rows = await db.query(
+            `SELECT role.title, role.id AS 'role.id', role.salary, department.name AS department
+            from role LEFT JOIN department ON role.department_id = department.id`
+        );
+        console.table(rows);
+        return rows;
+    } catch (err) {
+        console.log(err);
+    }
+}
+//viewAllDepartments()
+async function viewAllDepartments() {
+    try {
+        const rows = await db.query("SELECT * FROM department");
+        console.table(rows);
+        return rows;
+    } catch (err) {
+        console.log(err);
+    } 
+}
 
 
 
