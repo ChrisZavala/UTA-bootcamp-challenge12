@@ -91,6 +91,11 @@ async function startApp() {
         }
     }
 }
+//kills my database connection when the app is stopped. 
+process.on("exit", async function(code) {
+    await db.close();
+    return console.log(`You are going to exit with code ${code}`);
+});
 
 //functions listed above starting from the beginning
 
@@ -163,6 +168,48 @@ async function getRoleInfo() {
         }
     ])
 }
+//getRemoveEmployeeInfo()
+async function getRemoveEmployeeInfo() {
+    const employees = await getEmployeeNames();
+    return inquirer.prompt([
+        {
+            type: "list",
+            name: "employeeName",
+            message: "Which employee do you want to remove?",
+            choices: [
+                ...employees
+            ]
+        }
+    ])
+}
+//getUpdateEmployeeRoleInfo()
+async function getUpdateEmployeeRoleInfo() {
+    const employees = await getEmployeeNames();
+    const roles = await getRoles();
+    return inquirer.prompt([
+        {
+            type: "list",
+            name: "employeeName",
+            message: "Which employee do you want to update",
+            choices: [
+                ...employees
+            ]
+        },
+        {
+            type: "list",
+            name: "role",
+            message: "What is the employee's new role?",
+            choices: [
+                ...roles
+            ]
+        }
+    ])
+}
+//viewAllDepartments()
+//viewAllEmployees()
+//viewAllEmployeesByDepartment()
+//viewAllRoles()
+//will put these with all the functions that are calling the database. 
 
 
 
