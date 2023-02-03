@@ -48,7 +48,7 @@ async function startApp() {
                 break
             }
             case 'Add Employee': {
-                const newEmployee = await getEmployeeInfo();
+                const newEmployee = await getAddEmployeeInfo();
                 await addEmployee(newEmployee);
                 break;
             }
@@ -91,5 +91,79 @@ async function startApp() {
         }
     }
 }
+
+//functions listed above starting from the beginning
+
+//getDepartmentInfo()
+async function getDepartmentInfo() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the name of the new department?",
+            name: "departmentName"
+        }
+    ])
+}
+
+//getAddEmployeeInfo()
+async function getAddEmployeeInfo() {
+    const managers = await getManagerNames()
+    const roles = await getRoles();
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "first_name",
+            message: "What is the employee's first name?"
+        },
+        {
+            type: "input",
+            name: "last_name",
+            message: "What is the employee's last name?"
+        },
+        {
+            type: "list",
+            name: "role",
+            message: "What is the employee's role?",
+            choices: [
+                ...roles
+            ]
+        },
+        {
+            type: "list",
+            name: "manager",
+            message: "Who is the employee's manager?",
+            choices: [
+                ...managers
+            ]
+        }
+    ])
+}
+
+//getRoleInfo()
+async function getRoleInfo() {
+    const departments = await getDepartmentNames();
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "roleName",
+            message: "What is the title of the new role?"
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "What is the salary of the new role?"
+        },
+        {
+            type: "list",
+            name: "departmentName",
+            message: "Which department uses this role?",
+            choices: [
+                ...departments
+            ]
+        }
+    ])
+}
+
+
 
 startApp();
