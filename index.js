@@ -341,7 +341,40 @@ async function viewAllEmployees() {
     } catch (err) {
         console.log(err);
     }
-
+}
+//viewAllEmployeesByDepartment()
+async function viewAllEmployeesByDepartment() {
+    try {
+        const rows = await db.query("SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);");
+        console.table(rows);
+    } catch (err) {
+        console.log(err);
+    }
+}
+//updateEmployeeRole()
+async function updateEmployeeRole() {
+    try {
+        const roleId = await getRoleId(employeeInfo.role);
+        const employee = getFirstandLastName(employeeInfo.employeeName);
+        const args = [roleId, employee[0], employee[1]];
+        const rows = await db.query("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?", args);
+        console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
+    } catch (err) {
+        console.log(err);
+    }
+}
+//getFirstandLastName()
+async function getFirstandLastName(fullName) {
+    try {
+        const employee = fullName.split(" ");
+        let first_name = " ";
+        for(let i=0; i<employee.length-1; i++) {
+            first_name = first_name + employee[i] + " ";
+        }
+        return[first_name.trim(), last_name];
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 
