@@ -1,7 +1,7 @@
 // Variable declaration: 
 const inquirer = require("inquirer");
 const employeeDatabase = require("./lib/db");
-require('console.table');
+let cTable = require("console.table");
 
 //need to log into the employee Database: 
 const db = new employeeDatabase({
@@ -20,15 +20,15 @@ async function startQuestions() {
             message: "What would you like to do?",
             name: "action",
             choices: [
-                "Add Department",
-                "Add Employee",
-                "Add Role",
-                "Remove Employee",
-                "Update Employee Role",
                 "View All Departments",
-                "View All Employees",
-                "View All Employees By Department",
                 "View All Roles",
+                "View All Employees",
+                "Add Department",
+                "Add Role",
+                "Add Employee",
+                "Update Employee Role",
+                "Remove Employee",
+                "View All Employees By Department",
                 "Exit"
             ]
         }
@@ -46,15 +46,18 @@ async function startApp() {
             case 'Add Department': {
                 const newDepartmentName = await getDepartmentInfo();
                 await addDepartment(newDepartmentName);
-                break
+                break;
             }
             case 'Add Employee': {
                 const newEmployee = await getAddEmployeeInfo();
+                console.log("Add An Employee");
+                console.log(newEmployee);
                 await addEmployee(newEmployee);
                 break;
             }
             case 'Add Role': {
                 const newRole = await getRoleInfo();
+                console.log("Add A Role");
                 await addRole(newRole);
                 break;
             }
@@ -86,6 +89,8 @@ async function startApp() {
             }
             case 'Exit': {
                 exit = true;
+                console.log("Good Bye!");
+                process.exit(0);
                 return;
             }
             default: console.log(`An Error has happened in processing your request, this caused ${prompt.action}`);
@@ -290,14 +295,11 @@ async function getEmployeeNames() {
 }
 //getEmployeeId
 async function getEmployeeId(fullName) {
-    try{
-        const employee = getFirstandLastName(fullName);
-        const args = [employee[0], employee[1]];
-        const results = await db.query("SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name", args);
-        return results[0].id;
-    } catch (err) {
-        console.log(err);
-    }
+    let employee = getFirstandLastName(fullName);
+    let query = 'SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?';
+    let args=[employee[0], employee[1]];
+    const rows = await db.query(query, args);
+    return rows[0].id;
 }
 //All my views are coming!
 //viewAllRoles()
@@ -355,52 +357,59 @@ async function viewAllEmployeesByDepartment() {
     }
 }
 //updateEmployeeRole()
-async function updateEmployeeRole() {
+async function updateEmployeeRole(employeeInfo) {
     try {
         const roleId = await getRoleId(employeeInfo.role);
         const employee = getFirstandLastName(employeeInfo.employeeName);
-        const args = [roleId, employee[0], employee[1]];
-        const results = await db.query("UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?", args);
+        let query = 'UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?';
+        let args=[roleId, employee[0], employee[1]];
+        const rows = await db.query(query, args);
         console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
     } catch (err) {
-        console.log(err);
+        console.log(err);  
     }
 }
 //getFirstandLastName()
-async function getFirstandLastName(fullName) {
+function getFirstandLastName(fullName) {
     try {
-        const employee = fullName.split(" ");
+        let employee = fullName.split(" ");
+        if(employee.length == 2) {
+            return employee;
+        }
+        const last_name = employee[employee.length-1];
         let first_name = " ";
         for(let i=0; i<employee.length-1; i++) {
             first_name = first_name + employee[i] + " ";
         }
-        return[first_name.trim(), last_name];
+        return [first_name.trim(), last_name];
     } catch (err) {
-        console.log(err);
+        console.log(err); 
     }
 }
 //addEmployee()
 async function addEmployee(employeeInfo) {
     try {
-        const roleId = await getRoleId(employeeInfo.role);
-        const managerId = await getEmployeeId(employeeInfo.role);
+        let roleId = await getRoleId(employeeInfo.role);
+        let managerId = await getEmployeeId(employeeInfo.manager);
         const args = [employeeInfo.first_name, employeeInfo.last_name, roleId, managerId];
-        const results = await db.query("INSERT into employee (first_name, last_name, role_id, manager_id", args);
+        const results = await db.query("INSERT into employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)", args);
         console.log(`Added employee ${employeeInfo.first_name} ${employeeInfo.last_name}.`);
     } catch (err) {
         console.log(err);
     }
-    startQuestions();
-};
+    // startQuestions();
+}
+//Didn't realize that this wasn't suppose to be included in the criteria, will leave it in.
 //removeEmployee()
-async function removeEmployee() {
+async function removeEmployee(employeeInfo) {
     try {
         const employeeName = getFirstandLastName(employeeInfo.employeeName);
-        const args = [employeeName[0], employeeName[1]];
-        const results = await db.query("DELETE from employee WHERE first_name=? AND last_name=?", args);
-        console.log(`Employee Deleted: ${employeeName[0]} ${employeeName[1]}`);
+        let query = "DELETE from employee WHERE first_name=? AND last_name=?";
+        let args = [employeeName[0], employeeName[1]];
+        const rows = await db.query(query, args);
+        console.log(`Employee removed: ${employeeName[0]} ${employeeName[1]}`);
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 //addDepartment()
@@ -413,8 +422,8 @@ async function addDepartment(departmentInfo) {
     } catch (err) {
         console.log(err);
     }
-    startQuestions();
-};
+    // startQuestions();
+}
 //addRole()
 async function addRole(roleInfo) {
     try {
@@ -423,11 +432,11 @@ async function addRole(roleInfo) {
         const title = roleInfo.roleName;
         const args = [title, salary, departmentId];
         const results = await db.query("INSERT into role (title, salary, department_id) VALUES (?,?,?)", args);
-        console.log(`Added role ${title}`);
+        console.log(`Added the Role of: ${title}`);
     } catch (err) {
         console.log(err);    
     }
-     startQuestions();
+    //  startQuestions();
 }
 //As the world of functions turn!
 
