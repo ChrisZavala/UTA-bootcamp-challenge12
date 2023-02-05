@@ -1,7 +1,7 @@
 // Variable declaration: 
 const inquirer = require("inquirer");
 const employeeDatabase = require("./lib/db");
-let cTable = require("console.table");
+require('console.table');
 
 //need to log into the employee Database: 
 const db = new employeeDatabase({
