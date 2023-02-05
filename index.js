@@ -358,16 +358,14 @@ async function viewAllEmployeesByDepartment() {
 }
 //updateEmployeeRole()
 async function updateEmployeeRole(employeeInfo) {
-    try {
+    
         const roleId = await getRoleId(employeeInfo.role);
         const employee = getFirstandLastName(employeeInfo.employeeName);
         let query = 'UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?';
         let args=[roleId, employee[0], employee[1]];
         const rows = await db.query(query, args);
         console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
-    } catch (err) {
-        console.log(err);  
-    }
+    
 }
 //getFirstandLastName()
 function getFirstandLastName(fullName) {

@@ -1,26 +1,29 @@
+USE employee_db;
+
 INSERT INTO department (name)
-VALUES      ("Engineering"),
-            ("Finance"),
-            ("Legal"),
-            ("Sales");
+VALUES ("Engineering"),
+       ("Finance"),
+       ("Legal"),
+       ("HR"),
+       ("IT"),
+       ("Security");
 
 INSERT INTO role (title, salary, department_id)
-VALUES      ("Senior Engineer", 300000, 01),
-            ("Software Engineer", 200000, 02),
-            ("Lead Sales", 100000, 03),
-            ("Account Manager", 150000, 04),
-            ("Accountant", 100000, 05),
-            ("Lawyer", 250000, 06);
-            
+VALUES ('CEO Senior Engineer', 425000, 1),
+       ('Electrical Engineer', 200000, 1),
+       ('Software Engineer', 185000, 1),
+       ('Lawyer', 300000, 3),
+       ('Accountant', 125000, 2),
+       ('HR Rep', 100000, 4),
+       ('Director of IT', 250000, 5),
+       ('Head of Security', 115000, 6);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES      ("Kevin", "Mitnik", 1, NULL),
-            ("Johnny", "Shankers", 2, 1),
-            ("Enrico", "Fermi", 2, 1),
-            ("Cristiano", "De La Fuente", 3, NULL),
-            ("Lita", "Ford", 4, NULL),
-            ("Joe Dee", "Foster", 5, 5),
-            ("Chon", "Mee", 5, 5),
-            ("Wiley", "Dufrane", 6, 4),
-            ("Paul", "Escobar", 7, 8),
-            ("Homer", "Simpson", 7, 8);
+VALUES ('Kevin', 'Mitnik', 1, NULL),
+       ('Jack', 'Kilby', 2, 1),
+       ('Joe Dee', 'Foster', 3, 1),
+       ('Rick', 'Roll', 4, 1),
+       ('Cristian','De La Fuente', 5, 1),
+       ('Hunter S.', 'Thompson', 6, 1),
+       ('Steve', 'Wozniak', 7, NULL),
+       ('Pablo', 'Escobar', 8, NULL);
