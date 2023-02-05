@@ -298,8 +298,8 @@ async function getEmployeeId(fullName) {
     let employee = getFirstandLastName(fullName);
     let query = 'SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?';
     let args=[employee[0], employee[1]];
-    const rows = await db.query(query, args);
-    return rows[0].id;
+    const results = await db.query(query, args);
+    return results[0].id;
 }
 //All my views are coming!
 //viewAllRoles()
@@ -363,7 +363,7 @@ async function updateEmployeeRole(employeeInfo) {
         const employee = getFirstandLastName(employeeInfo.employeeName);
         let query = 'UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?';
         let args=[roleId, employee[0], employee[1]];
-        const rows = await db.query(query, args);
+        const results = await db.query(query, args);
         console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
     
 }
@@ -404,7 +404,7 @@ async function removeEmployee(employeeInfo) {
         const employeeName = getFirstandLastName(employeeInfo.employeeName);
         let query = "DELETE from employee WHERE first_name=? AND last_name=?";
         let args = [employeeName[0], employeeName[1]];
-        const rows = await db.query(query, args);
+        const results = await db.query(query, args);
         console.log(`Employee removed: ${employeeName[0]} ${employeeName[1]}`);
     } catch (err) {
         console.log(err);
